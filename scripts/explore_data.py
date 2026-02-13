@@ -68,3 +68,26 @@ def analyze_distribution(df, set_name="Train"):
     plt.tight_layout()
     plt.savefig(os.path.join(RESULTS_DIR, f'{set_name.lower()}_distribution.png'))
     plt.close()
+
+def main():
+    print("Starting Data Exploration...")
+    ensure_dir(RESULTS_DIR) # Ensure results directory exists
+
+    if os.path.exists(TRAIN_FILE):
+        print(f"Loading {TRAIN_FILE}...")
+        train_df = pd.read_csv(TRAIN_FILE)
+
+        print(f"Training samples: {len(train_df)}")
+        print(f"Columns: {train_df.columns.tolist()}")
+
+        # Check image shape
+        first_img = parse_pixels(train_df.iloc[0]['pixels'])
+        print(f"Image shape: {int(np.sqrt(len(first_img)))}x{int(np.sqrt(len(first_img)))}")
+
+        analyze_distribution(train_df, "Train")
+        plot_samples(train_df)
+    else:
+        print(f"Warning: {TRAIN_FILE} not found.")
+
+if __name__ == "__main__":
+    main()
