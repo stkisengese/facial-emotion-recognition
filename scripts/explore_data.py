@@ -42,6 +42,9 @@ def plot_samples(df, num_samples=5):
 
         for i, (_, row) in enumerate(samples.iterrows()):
             pixels = parse_pixels(row['pixels'])
+            if len(pixels) != 48*48:
+                print(f"Warning: Invalid pixel length {len(pixels)} for image, skipping.")
+                continue
             img = pixels.reshape(48, 48)
             axes[i].imshow(img, cmap='gray')
             axes[i].axis('off')
@@ -76,6 +79,9 @@ def main():
     if os.path.exists(TRAIN_FILE):
         print(f"Loading {TRAIN_FILE}...")
         train_df = pd.read_csv(TRAIN_FILE)
+
+        if 'pixels' not in train_df.columns or 'emotion' not in train_df.columns:
+            raise ValueError("CSV missing required columns: 'emotion' and/or 'pixels'")
 
         print(f"Training samples: {len(train_df)}")
         print(f"Columns: {train_df.columns.tolist()}")
