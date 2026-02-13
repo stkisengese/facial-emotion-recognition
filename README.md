@@ -20,3 +20,33 @@ Key Features:
 - Seven emotion categories: Happy, Sad, Angry, Surprise, Fear, Disgust, Neutral
 
 This project demonstrates end-to-end machine learning workflow including data preprocessing, model training with early stopping, real-time inference, and deployment-ready code.
+
+##  Quick Start
+
+### Option 1: Mamba/Conda (Recommended - Matches my setup)
+```bash
+mamba env create -f environment.yml
+mamba activate cnn_env
+```
+
+### Option 2: Pip/Venv (Lightweight)
+bash
+```python3.11 -m venv venv
+source venv/bin/activate  # Linux/Mac
+pip install -r requirements.txt
+```
+
+### Option 3: Google Colab (GPU)
+```
+!pip install -r requirements.txt
+```
+
+### Verify Setup
+```bash
+python -c "import tensorflow as tf; print(tf.__version__)"
+python -c "import keras; print(keras.__version__)"
+python -c "import numpy as np; print(np.__version__)"
+python -c "import cv2; print(cv2.__version__)"
+
+jupyter lab  # Start notebook
+```
