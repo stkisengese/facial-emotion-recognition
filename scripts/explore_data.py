@@ -51,3 +51,20 @@ def plot_samples(df, num_samples=5):
         plt.savefig(save_path)
         plt.close()
         print(f"Saved {save_path}")
+
+def analyze_distribution(df, set_name="Train"):
+    counts = df['emotion'].value_counts().sort_index()
+    counts.index = [EMOTION_LABELS[i] for i in counts.index]
+
+    print(f"\n{set_name} Distribution:")
+    print(counts)
+
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x=counts.index, y=counts.values, palette='viridis', hue=counts.index, legend=False)
+    plt.title(f'{set_name} Class Distribution')
+    plt.ylabel('Count')
+    plt.xlabel('Emotion')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig(os.path.join(RESULTS_DIR, f'{set_name.lower()}_distribution.png'))
+    plt.close()
