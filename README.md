@@ -21,6 +21,27 @@ Key Features:
 
 This project demonstrates end-to-end machine learning workflow including data preprocessing, model training with early stopping, real-time inference, and deployment-ready code.
 
+## 📊 Data Analysis
+
+The model is trained on the FER2013 dataset.
+
+- **Image Properties**: 48x48 pixels, Grayscale (1 channel).
+- **Pixel Range**: 0-255.
+- **Emotions**: 0:Angry, 1:Disgust, 2:Fear, 3:Happy, 4:Sad, 5:Surprise, 6:Neutral.
+
+### Class Distribution
+The dataset is known to be imbalanced, with 'Happy' being the most represented and 'Disgust' the least.
+
+| Emotion | Train Samples |
+|---------|---------------|
+| Angry   | ~3,995        |
+| Disgust | ~436          |
+| Fear    | ~4,097        |
+| Happy   | ~7,215        |
+| Sad     | ~4,830        |
+| Surprise| ~3,171        |
+| Neutral | ~4,965        |
+
 ##  Quick Start
 
 ### Option 1: Mamba/Conda (Recommended - Matches my setup)
