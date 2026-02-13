@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+.venv
+
+# Project specific
+data/*.csv
+# results/
+
+# Models
+*.h5
+*.keras
+*.pkl
+
+# Media
+*.png
+*.jpg
+*.mp4
