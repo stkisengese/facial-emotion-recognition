@@ -22,14 +22,19 @@ EMOTION_LABELS = {
     6: 'Neutral'
 }
 
+# Ensure results directory exists
 def ensure_dir(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+# Utility function to convert pixel string to numpy array
 def parse_pixels(pixel_string):
     return np.array(pixel_string.split(), dtype='uint8')
 
+# Plot sample images for each emotion category to visually inspect the data
 def plot_samples(df, num_samples=5):
+    """ Plot sample images for each emotion category."""
+
     for emotion_idx, emotion_name in EMOTION_LABELS.items():
         emotion_df = df[df['emotion'] == emotion_idx]
         if emotion_df.empty:
@@ -56,6 +61,8 @@ def plot_samples(df, num_samples=5):
         print(f"Saved {save_path}")
 
 def analyze_distribution(df, set_name="Train"):
+    """ Analyze and plot the distribution of emotion classes in the dataset."""
+
     counts = df['emotion'].value_counts().sort_index()
     counts.index = [EMOTION_LABELS[i] for i in counts.index]
 
@@ -76,10 +83,12 @@ def main():
     print("Starting Data Exploration...")
     ensure_dir(RESULTS_DIR) # Ensure results directory exists
 
+    # Load and analyze training data
     if os.path.exists(TRAIN_FILE):
         print(f"Loading {TRAIN_FILE}...")
         train_df = pd.read_csv(TRAIN_FILE)
 
+        # Check for required columns
         if 'pixels' not in train_df.columns or 'emotion' not in train_df.columns:
             raise ValueError("CSV missing required columns: 'emotion' and/or 'pixels'")
 
