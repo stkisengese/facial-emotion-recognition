@@ -1,20 +1,19 @@
-Emotions detector
-Overview
+# Emotions detector
+## Overview
 
 Cameras are everywhere. Videos and images have become one of the most interesting data sets for artificial intelligence. Image processing is a quite broad research area, not just filtering, compression, and enhancement.
 
 Besides, we are even interested in the question, “what is in images?”, i.e., content analysis of visual inputs, which is part of the main task of computer vision.
-Role play
 
+## Role play
 you're going to train a computer to be like a mind reader, but instead of reading thoughts, it's reading emotions! You'll be working with a bunch of pictures of faces, teaching your AI to tell the difference between a big grin and a grumpy frown, or a surprised gasp and a fearful wide-eyed look.
 Learning Objective
 
 The study of computer vision could make possible such tasks as 3D reconstruction of scenes, motion capturing, and object recognition, which are crucial for even higher-level intelligence such as image and video understanding, and motion understanding.
 
 For this project we will focus on two tasks:
-
-    Emotion classification
-    Face tracking
+- **Emotion classification**
+- **Face tracking**
 
 With the computing power exponentially increasing the computer vision field has been developing exponentially. This is a key element because the computer power allows using more easily a type of neural networks very powerful on images:
 
@@ -22,8 +21,8 @@ With the computing power exponentially increasing the computer vision field has 
 
     The history behind this field is fascinating! Here is a short summary of its history.
 
-Instructions
-Project goal:
+## Instructions
+**Project goal:**
 
 The goal of the project is to implement a system that detects the emotion on a face from a webcam video stream. To achieve this exciting task you'll have to understand how to:
 
@@ -46,7 +45,7 @@ Preliminary:
 
     Start first with a logistic regression to understand how to handle images in Python. And then train your first CNN on this data set.
 
-Face emotions classification
+## Face emotions classification
 
 Emotion detection is one of the most researched topics in the modern-day machine learning arena. The ability to accurately detect and identify an emotion opens up numerous doors for Advanced Human Computer Interaction. The aim of this project is to detect up to seven distinct facial emotions in real time.
 
@@ -60,7 +59,7 @@ Step 1: Fit the emotion classifier
 
         Note: Integrating TensorBoard is mandatory.
 
-You have to save the trained model in final_emotion_model.keras and to explain the chosen architecture in final_emotion_model_arch.txt. Use model.summary()) to print the architecture. It is also expected that you explain the iterations and how you end up choosing your final architecture. Save a screenshot of the TensorBoard while the model's training in tensorboard.png and save a plot with the learning curves showing the model training and stopping BEFORE the model starts overfitting in learning_curves.png.
+You have to save the trained model in final_emotion_model.keras and to explain the chosen architecture in final_emotion_model_arch.txt. Use model.summary() to print the architecture. It is also expected that you explain the iterations and how you end up choosing your final architecture. Save a screenshot of the TensorBoard while the model's training in tensorboard.png and save a plot with the learning curves showing the model training and stopping BEFORE the model starts overfitting in learning_curves.png.
 
     Optional: Use a pre-trained CNN to improve the accuracy. You will find some huge CNN's architecture that perform well. The issue is that it is expensive to train them from scratch. You'll need a lot of GPUs, memory and time. Pre-trained CNNs solve partially this issue because they are already trained on a dataset and perform well on some use cases. However, building a CNN from scratch is required, as mentioned, this step is optional and doesn't replace the first one. Similarly, save the model and explain the chosen architecture.
 
@@ -105,7 +104,7 @@ project
     └── train.py
 
     Run predict.py expected output:
-
+```bash
 python ./scripts/predict.py
 
 Accuracy on test set: 62%
@@ -132,17 +131,11 @@ Preprocessing ...
 
 Preprocessing ...
 11:13:29s : Happy , 63%
+```
 
-Tips
+## Tips
 
 Balance technical prowess with psychological insight: as you fine-tune your CNN and optimize your video processing, remember that understanding the nuances of human facial expressions is key to creating a truly effective emotion detection system. Good luck!
-Resources
 
-    What is computer vision
 
-    Use a pre-trained CNN
-
-    Hack the CNN
-
-    Convolutional Neural Network
 

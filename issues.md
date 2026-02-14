@@ -7,7 +7,7 @@
 
 ---
 
-## 🎯 Issue #1: Project Setup and Environment Configuration
+## Issue #1: Project Setup and Environment Configuration
 
 **Labels:** `setup`, `priority-high`, `beginner-friendly`
 
@@ -15,7 +15,7 @@
 Set up the project structure, development environment, and dependencies before starting development.
 
 ### Tasks
-- [ ] Create project directory structure as specified:
+- [x] Create project directory structure as specified:
   ```
   project/
   ├── data/
@@ -56,7 +56,7 @@ Set up the project structure, development environment, and dependencies before s
 
 ---
 
-## 📦 Issue #2: Download and Explore Emotion Dataset
+## Issue #2: Download and Explore Emotion Dataset
 
 **Labels:** `data`, `priority-high`, `exploration`  
 **Depends on:** #1
@@ -76,14 +76,14 @@ Download the Kaggle emotion detection dataset and perform exploratory data analy
   print(train_df.info())
   print(train_df['emotion'].value_counts())
   ```
-- [ ] Verify data format:
+- [x] Verify data format:
   - Check image dimensions (should be 48×48 pixels)
   - Check grayscale (single channel)
   - Check pixel value ranges (0-255)
-- [ ] Analyze class distribution (check for imbalance)
-- [ ] Visualize sample images from each emotion class
-- [ ] Create visualization: Plot 5 random samples per emotion class
-- [ ] Document findings in `README.md`:
+- [x] Analyze class distribution (check for imbalance)
+- [x] Visualize sample images from each emotion class
+- [x] Create visualization: Plot 5 random samples per emotion class
+- [x] Document findings in `README.md`:
   - Total training samples
   - Total test samples
   - Class distribution
@@ -118,7 +118,7 @@ def plot_emotion_samples(df, emotion_label, num_samples=5):
 
 ---
 
-## 🔧 Issue #3: Create Data Preprocessing Pipeline
+## Issue #3: Create Data Preprocessing Pipeline
 
 **Labels:** `data`, `priority-high`, `preprocessing`  
 **Depends on:** #2
@@ -127,25 +127,25 @@ def plot_emotion_samples(df, emotion_label, num_samples=5):
 Build a robust data preprocessing pipeline to prepare images for CNN training.
 
 ### Tasks
-- [ ] Create `scripts/preprocess.py` with preprocessing functions
-- [ ] Implement function to parse pixel strings to numpy arrays:
+- [x] Create `scripts/preprocess.py` with preprocessing functions
+- [x] Implement function to parse pixel strings to numpy arrays:
   ```python
   def parse_pixels(pixel_string):
       pixels = np.array(pixel_string.split(), dtype='uint8')
       return pixels.reshape(48, 48, 1)  # Add channel dimension
   ```
-- [ ] Implement normalization (scale 0-255 → 0-1):
+- [x] Implement normalization (scale 0-255 → 0-1):
   ```python
   def normalize_image(image):
       return image.astype('float32') / 255.0
   ```
-- [ ] Create train/validation split from train.csv (80/20 or 90/10)
-- [ ] Implement data augmentation using `ImageDataGenerator`:
+- [x] Create train/validation split from train.csv (80/20 or 90/10)
+- [x] Implement data augmentation using `ImageDataGenerator`:
   - Rotation range: ±10 degrees
   - Width/height shift: 10%
   - Horizontal flip: True
   - Zoom range: 10%
-- [ ] Create function to load and preprocess entire dataset:
+- [x] Create function to load and preprocess entire dataset:
   ```python
   def load_and_preprocess_data(csv_path, augment=False):
       # Load CSV
@@ -154,10 +154,10 @@ Build a robust data preprocessing pipeline to prepare images for CNN training.
       # Convert labels to categorical
       # Return X, y
   ```
-- [ ] Convert emotion labels to one-hot encoding (7 classes)
-- [ ] Verify preprocessed data shape: `(num_samples, 48, 48, 1)`
-- [ ] Save preprocessing functions for reuse in prediction scripts
-- [ ] Test preprocessing pipeline with small sample
+- [x] Convert emotion labels to one-hot encoding (7 classes)
+- [x] Verify preprocessed data shape: `(num_samples, 48, 48, 1)`
+- [x] Save preprocessing functions for reuse in prediction scripts
+- [x] Test preprocessing pipeline with small sample
 
 ### Acceptance Criteria
 - Preprocessing functions work correctly
@@ -172,7 +172,7 @@ Build a robust data preprocessing pipeline to prepare images for CNN training.
 
 ---
 
-## 🏗️ Issue #4: Build Baseline CNN Architecture
+## Issue #4: Build Baseline CNN Architecture
 
 **Labels:** `model`, `priority-high`, `cnn`  
 **Depends on:** #3
@@ -181,8 +181,8 @@ Build a robust data preprocessing pipeline to prepare images for CNN training.
 Implement a baseline CNN architecture to establish performance benchmark before optimization.
 
 ### Tasks
-- [ ] Create `scripts/train.py` for model training
-- [ ] Implement simple baseline CNN (similar to MNIST experience):
+- [x] Create `scripts/train.py` for model training
+- [x] Implement simple baseline CNN (similar to MNIST experience):
   ```python
   model = Sequential([
       Conv2D(32, (3,3), padding="same", input_shape=(48,48,1)),
@@ -205,15 +205,15 @@ Implement a baseline CNN architecture to establish performance benchmark before 
       Dense(7, activation='softmax')
   ])
   ```
-- [ ] Compile model:
+- [x] Compile model:
   - Optimizer: Adam (lr=0.001)
   - Loss: categorical_crossentropy
   - Metrics: accuracy
-- [ ] Print `model.summary()` and save to `results/model/baseline_arch.txt`
-- [ ] Train for 10-20 epochs (quick baseline)
-- [ ] Evaluate on test set
-- [ ] Document baseline accuracy in `README.md`
-- [ ] Save model as `baseline_model.keras`
+- [x] Print `model.summary()` and save to `results/model/baseline_arch.txt`
+- [x] Train for 10-20 epochs (quick baseline)
+- [x] Evaluate on test set
+- [x] Document baseline accuracy in `README.md`
+- [x] Save model as `baseline_model.keras`
 
 ### Acceptance Criteria
 - Baseline model trains without errors

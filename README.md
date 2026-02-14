@@ -71,3 +71,8 @@ python -c "import cv2; print(cv2.__version__)"
 
 jupyter lab  # Start notebook
 ```
+
+## Preprocessing
+- Images resized/normalized to 48×48×1 grayscale [0,1]
+- Augmentation: ±10° rotation, 10% shift/zoom, horizontal flip
+- Train/val split: 80/20 stratified
