@@ -105,3 +105,61 @@ def get_callbacks():
     )
 
     return [tensorboard, early_stop, checkpoint]
+
+# ────────────────────────────────────────────────
+#               Main Training Flow
+# ────────────────────────────────────────────────
+def main():
+    print("Starting Baseline CNN Training (Issue #4)...")
+
+    # Load data with augmentation
+    (X_train, y_train), (X_val, y_val), datagen = load_and_preprocess_data(
+        os.path.join(DATA_DIR, 'train.csv'),
+        split='train',
+        augment=True,
+        val_split=0.2
+    )
+
+    model = build_baseline_model()
+    model.summary()
+
+    # Save architecture to text file
+    with open(ARCH_TXT_PATH, 'w') as f:
+        f.write("=== BASELINE MODEL ARCHITECTURE (Issue #4) ===\n\n")
+        model.summary(print_fn=lambda x: f.write(x + '\n'))
+        f.write("\n\nHyperparameters:\n")
+        f.write(f"Batch size:     {BATCH_SIZE}\n")
+        f.write(f"Learning rate:  {LEARNING_RATE}\n")
+        f.write(f"Max epochs:     {EPOCHS}\n")
+        f.write(f"Optimizer:      Adam\n")
+        f.write(f"Augmentation:   Yes (rotation±10°, shift/zoom 10%, hflip)\n")
+
+    print(f"Model architecture saved to: {ARCH_TXT_PATH}")
+
+    callbacks = get_callbacks()
+
+    print("Starting training...")
+    history = model.fit(
+        datagen.flow(X_train, y_train, batch_size=BATCH_SIZE),
+        validation_data=(X_val, y_val),
+        epochs=EPOCHS,
+        callbacks=callbacks,
+        verbose=1
+    )
+
+    # Quick final evaluation on validation set
+    val_loss, val_acc = model.evaluate(X_val, y_val, verbose=0)
+    print(f"\nFinal validation accuracy: {val_acc:.4f} ({val_acc*100:.2f}%)")
+    print(f"Model saved (best weights) at: {BASELINE_MODEL_PATH}")
+
+    print("\nDone. Next steps:")
+    print("1. Check results/model/baseline_arch.txt")
+    print("2. Launch TensorBoard: tensorboard --logdir results/logs")
+    print("3. Take screenshot → save as results/model/tensorboard.png")
+    print("4. Move to Issue #5 (more callbacks) & #8 (optimization)")
+
+
+if __name__ == "__main__":
+    tf.random.set_seed(42)   # reproducibility
+    np.random.seed(42)
+    main()
