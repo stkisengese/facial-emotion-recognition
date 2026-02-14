@@ -157,6 +157,14 @@ def main():
         verbose=1
     )
 
+    # Save training history
+    import pickle
+    
+    history_dict = history.history
+    with open(os.path.join(MODEL_DIR, 'baseline_history.pkl'), 'wb') as f:
+        pickle.dump(history_dict, f)
+    print(f"Training history saved to: {os.path.join(MODEL_DIR, 'baseline_history.pkl')}")
+
     # Quick final evaluation on validation set
     val_loss, val_acc = model.evaluate(X_val, y_val, verbose=0)
     print(f"\nFinal validation accuracy: {val_acc:.4f} ({val_acc*100:.2f}%)")
