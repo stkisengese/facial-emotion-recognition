@@ -30,7 +30,7 @@ BASELINE_MODEL_PATH = os.path.join(MODEL_DIR, 'baseline_model.keras')
 ARCH_TXT_PATH = os.path.join(MODEL_DIR, 'baseline_arch.txt')
 
 BATCH_SIZE = 64
-EPOCHS = 30          # We'll use early stopping so likely < 30
+EPOCHS = 50          # We'll use early stopping so likely < 30
 LEARNING_RATE = 0.001
 
 ensure_dir(MODEL_DIR)
@@ -109,9 +109,9 @@ def get_callbacks():
         monitor='val_loss',
         factor=0.5, # Reduce learning rate by half if validation loss doesn't improve for 4 epochs
         patience=4,
-        min_lr=1e-6, # Don't reduce below this learning rate
+        min_lr=1e-5, # Don't reduce below this learning rate
         verbose=1,
-        cooldown=1          # Wait for 2 epochs after reducing LR before monitoring again to avoid rapid reductions
+        cooldown=2   # Wait for 2 epochs after reducing LR before monitoring again to avoid rapid reductions
     )
 
 
@@ -121,7 +121,7 @@ def get_callbacks():
 #               Main Training Flow
 # ────────────────────────────────────────────────
 def main():
-    print("Starting Baseline CNN Training (Issue #4)...")
+    print("Starting Baseline CNN Training...")
 
     # Load data with augmentation
     (X_train, y_train), (X_val, y_val), datagen = load_and_preprocess_data(
@@ -175,7 +175,6 @@ def main():
     print("1. Check results/model/baseline_arch.txt")
     print("2. Launch TensorBoard: tensorboard --logdir results/logs")
     print("3. Take screenshot → save as results/model/tensorboard.png")
-    print("4. Move to Issue #5 (more callbacks) & #8 (optimization)")
 
 
 if __name__ == "__main__":
