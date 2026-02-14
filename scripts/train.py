@@ -73,3 +73,35 @@ def build_baseline_model(input_shape=(48, 48, 1), num_classes=7):
     )
 
     return model
+
+# ────────────────────────────────────────────────
+#               Callbacks
+# ────────────────────────────────────────────────
+def get_callbacks():
+    timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    log_dir = os.path.join(LOGS_DIR, f"baseline_{timestamp}")
+
+    tensorboard = TensorBoard(
+        log_dir=log_dir,
+        histogram_freq=1,
+        write_graph=True,
+        write_images=True,
+        update_freq='epoch'
+    )
+
+    early_stop = EarlyStopping(
+        monitor='val_loss',
+        patience=8,
+        restore_best_weights=True,
+        verbose=1
+    )
+
+    checkpoint = ModelCheckpoint(
+        BASELINE_MODEL_PATH,
+        monitor='val_accuracy',
+        save_best_only=True,
+        mode='max',
+        verbose=1
+    )
+
+    return [tensorboard, early_stop, checkpoint]
