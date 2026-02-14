@@ -76,3 +76,9 @@ jupyter lab  # Start notebook
 - Images resized/normalized to 48×48×1 grayscale [0,1]
 - Augmentation: ±10° rotation, 10% shift/zoom, horizontal flip
 - Train/val split: 80/20 stratified
+
+## Monitoring
+
+```bash
+    tensorboard --logdir results/logs
+```

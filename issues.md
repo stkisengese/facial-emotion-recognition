@@ -236,8 +236,8 @@ Implement a baseline CNN architecture to establish performance benchmark before 
 Set up TensorBoard for real-time training monitoring. This is **MANDATORY** per project requirements.
 
 ### Tasks
-- [ ] Create TensorBoard log directory: `results/logs/`
-- [ ] Implement TensorBoard callback in `train.py`:
+- [x] Create TensorBoard log directory: `results/logs/`
+- [x] Implement TensorBoard callback in `train.py`:
   ```python
   from tensorflow.keras.callbacks import TensorBoard
   from datetime import datetime
@@ -251,7 +251,7 @@ Set up TensorBoard for real-time training monitoring. This is **MANDATORY** per 
       update_freq='epoch'
   )
   ```
-- [ ] Add callback to model.fit():
+- [x] Add callback to model.fit():
   ```python
   history = model.fit(
       ...,
@@ -264,7 +264,7 @@ Set up TensorBoard for real-time training monitoring. This is **MANDATORY** per 
   - Accuracy curves (train and validation)
   - Model graph
   - Histograms of weights/biases
-- [ ] Document TensorBoard access in `README.md`
+- [x] Document TensorBoard access in `README.md`
 - [ ] Take screenshot during training and save as `results/model/tensorboard.png` (**REQUIRED**)
 
 ### Additional Monitoring
@@ -293,7 +293,7 @@ Set up TensorBoard for real-time training monitoring. This is **MANDATORY** per 
 Prevent overfitting by implementing early stopping and model checkpointing.
 
 ### Tasks
-- [ ] Implement Early Stopping callback:
+- [x] Implement Early Stopping callback:
   ```python
   from tensorflow.keras.callbacks import EarlyStopping
   
@@ -304,7 +304,7 @@ Prevent overfitting by implementing early stopping and model checkpointing.
       verbose=1
   )
   ```
-- [ ] Implement ModelCheckpoint callback:
+- [x] Implement ModelCheckpoint callback:
   ```python
   from tensorflow.keras.callbacks import ModelCheckpoint
   
@@ -316,7 +316,7 @@ Prevent overfitting by implementing early stopping and model checkpointing.
       verbose=1
   )
   ```
-- [ ] Implement ReduceLROnPlateau (optional but recommended):
+- [x] Implement ReduceLROnPlateau (optional but recommended):
   ```python
   from tensorflow.keras.callbacks import ReduceLROnPlateau
   
@@ -328,7 +328,7 @@ Prevent overfitting by implementing early stopping and model checkpointing.
       verbose=1
   )
   ```
-- [ ] Combine all callbacks:
+- [x] Combine all callbacks:
   ```python
   callbacks = [
       tensorboard_callback,
@@ -338,7 +338,7 @@ Prevent overfitting by implementing early stopping and model checkpointing.
   ]
   ```
 - [ ] Test training with callbacks (run for many epochs, verify early stopping triggers)
-- [ ] Document callback configuration in `README.md`
+- [x] Document callback configuration in `README.md`
 
 ### Acceptance Criteria
 - Early stopping prevents overfitting
@@ -361,12 +361,12 @@ Prevent overfitting by implementing early stopping and model checkpointing.
 Create and save learning curves showing training stopped before overfitting (REQUIRED deliverable).
 
 ### Tasks
-- [ ] Create `scripts/validation_loss_accuracy.py`
-- [ ] Extract training history after model.fit():
+- [x] Create `scripts/validation_loss_accuracy.py`
+- [x] Extract training history after model.fit():
   ```python
   history = model.fit(...)
   ```
-- [ ] Plot training vs validation loss:
+- [x] Plot training vs validation loss:
   ```python
   import matplotlib.pyplot as plt
   
