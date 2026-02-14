@@ -117,3 +117,20 @@ def load_and_preprocess_data(
     
     print(f"Train shape: {X_train.shape}, Val shape: {X_val.shape}")
     return (X_train, y_train), (X_val, y_val), datagen
+
+
+def get_test_data(labeled=True):
+    """
+    Convenience function to load test set.
+    Uses test_with_emotions.csv if labeled=True, else test.csv
+    """
+    if labeled:
+        path = os.path.join(DATA_DIR, 'test_with_emotions.csv')
+    else:
+        path = os.path.join(DATA_DIR, 'test.csv')
+    
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Test file not found: {path}")
+    
+    X, y = load_and_preprocess_data(path, split='test')
+    return X, y
