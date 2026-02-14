@@ -35,3 +35,41 @@ LEARNING_RATE = 0.001
 
 ensure_dir(MODEL_DIR)
 ensure_dir(LOGS_DIR)
+
+# ────────────────────────────────────────────────
+#               Build Baseline Model
+# ────────────────────────────────────────────────
+def build_baseline_model(input_shape=(48, 48, 1), num_classes=7):
+    model = Sequential([
+        # Block 1
+        Conv2D(32, (3, 3), padding='same', input_shape=input_shape),
+        BatchNormalization(),
+        LeakyReLU(alpha=0.1),
+        MaxPooling2D(pool_size=(2, 2)),
+        Dropout(0.25),
+
+        # Block 2
+        Conv2D(64, (3, 3), padding='same'),
+        BatchNormalization(),
+        LeakyReLU(alpha=0.1),
+        MaxPooling2D(pool_size=(2, 2)),
+        Dropout(0.25),
+
+        # Flatten + Dense
+        Flatten(),
+        Dense(128),
+        BatchNormalization(),
+        LeakyReLU(alpha=0.1),
+        Dropout(0.5),
+
+        # Output
+        Dense(num_classes, activation='softmax')
+    ])
+
+    model.compile(
+        optimizer=Adam(learning_rate=LEARNING_RATE),
+        loss='categorical_crossentropy',
+        metrics=['accuracy']
+    )
+
+    return model
