@@ -134,3 +134,32 @@ def get_test_data(labeled=True):
     
     X, y = load_and_preprocess_data(path, split='test')
     return X, y
+
+
+# Test the preprocessing pipeline
+if __name__ == "__main__":
+    ensure_dir('results/preprocessing_test')
+    
+    print("Testing preprocessing pipeline...")
+    
+    try:
+        (X_tr, y_tr), (X_v, y_v), _ = load_and_preprocess_data(
+            os.path.join(DATA_DIR, 'train.csv'),
+            split='train',
+            augment=True
+        )
+        
+        # Save one sample image to verify
+        import matplotlib.pyplot as plt
+        plt.imsave(
+            'results/preprocessing_test/sample_normalized.png',
+            X_tr[0].squeeze(),
+            cmap='gray'
+        )
+        print("Sample normalized image saved → results/preprocessing_test/sample_normalized.png")
+        
+        # Quick stats
+        print(f"Train samples: {len(X_tr)}, Val samples: {len(X_v)}")
+        
+    except Exception as e:
+        print(f"Preprocessing test failed: {e}")
