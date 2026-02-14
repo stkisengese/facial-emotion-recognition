@@ -14,7 +14,7 @@ from tensorflow.keras.layers import (
 )
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import (
-    TensorBoard, EarlyStopping, ModelCheckpoint
+    TensorBoard, EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 )
 from preprocess import (
     load_and_preprocess_data, DATA_DIR, ensure_dir
@@ -104,7 +104,17 @@ def get_callbacks():
         verbose=1
     )
 
-    return [tensorboard, early_stop, checkpoint]
+    reduce_lr = ReduceLROnPlateau(
+        monitor='val_loss',
+        factor=0.5, # Reduce learning rate by half if validation loss doesn't improve for 4 epochs
+        patience=4,
+        min_lr=0.00001, # Don't reduce below this learning rate
+        verbose=1,
+        cooldown=1          # Wait for 2 epochs after reducing LR before monitoring again to avoid rapid reductions
+    )
+
+
+    return [tensorboard, early_stop, checkpoint, reduce_lr]
 
 # ────────────────────────────────────────────────
 #               Main Training Flow
