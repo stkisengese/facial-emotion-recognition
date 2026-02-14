@@ -93,7 +93,8 @@ def get_callbacks():
         monitor='val_loss',
         patience=8,
         restore_best_weights=True,
-        verbose=1
+        verbose=1,
+        min_delta=0.001       # Only stop if improvement is less than 0.1% to avoid stopping on minor fluctuations
     )
 
     checkpoint = ModelCheckpoint(
@@ -108,7 +109,7 @@ def get_callbacks():
         monitor='val_loss',
         factor=0.5, # Reduce learning rate by half if validation loss doesn't improve for 4 epochs
         patience=4,
-        min_lr=0.00001, # Don't reduce below this learning rate
+        min_lr=1e-6, # Don't reduce below this learning rate
         verbose=1,
         cooldown=1          # Wait for 2 epochs after reducing LR before monitoring again to avoid rapid reductions
     )
@@ -159,7 +160,7 @@ def main():
 
     # Save training history
     import pickle
-    
+
     history_dict = history.history
     with open(os.path.join(MODEL_DIR, 'baseline_history.pkl'), 'wb') as f:
         pickle.dump(history_dict, f)
