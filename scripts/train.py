@@ -57,6 +57,13 @@ def build_baseline_model(input_shape=(48, 48, 1), num_classes=7):
         MaxPooling2D(pool_size=(2, 2)),
         Dropout(0.25),
 
+        # Block 3
+        Conv2D(128, (3, 3), padding='same'),
+        BatchNormalization(),
+        LeakyReLU(alpha=0.1),
+        MaxPooling2D(pool_size=(2, 2)),
+        Dropout(0.3),
+
         # Flatten + Dense
         Flatten(),
         Dense(128),
