@@ -11,7 +11,7 @@ import tensorflow as tf
 from tensorflow.keras import Sequential, Input
 from tensorflow.keras.layers import (
     Conv2D, BatchNormalization, LeakyReLU, MaxPooling2D,
-    Dropout, Flatten, Dense
+    Dropout, Flatten, Dense, SpatialDropout2D, GlobalAveragePooling2D
 )
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import (
@@ -31,7 +31,7 @@ BASELINE_MODEL_PATH = os.path.join(MODEL_DIR, 'baseline_model.keras')
 ARCH_TXT_PATH = os.path.join(MODEL_DIR, 'baseline_arch.txt')
 
 BATCH_SIZE = 64
-EPOCHS = 50          # We'll use early stopping so likely < 30
+EPOCHS = 100        # We'll use early stopping so likely < 30
 LEARNING_RATE = 0.001
 
 ensure_dir(MODEL_DIR)
@@ -46,29 +46,38 @@ def build_baseline_model(input_shape=(48, 48, 1), num_classes=7):
         Input(shape=input_shape),
         Conv2D(32, (3, 3), padding='same'),
         BatchNormalization(),
-        LeakyReLU(alpha=0.1),
+        LeakyReLU(negative_slope=0.1),
+        Conv2D(32, (3, 3), padding='same'),
+        BatchNormalization(),
+        LeakyReLU(negative_slope=0.1),
         MaxPooling2D(pool_size=(2, 2)),
         Dropout(0.25),
 
         # Block 2
         Conv2D(64, (3, 3), padding='same'),
         BatchNormalization(),
-        LeakyReLU(alpha=0.1),
+        LeakyReLU(negative_slope=0.1),
+        Conv2D(64, (3, 3), padding='same'),
+        BatchNormalization(),
+        LeakyReLU(negative_slope=0.1),
         MaxPooling2D(pool_size=(2, 2)),
-        Dropout(0.25),
+        SpatialDropout2D(0.25),
 
         # Block 3
         Conv2D(128, (3, 3), padding='same'),
         BatchNormalization(),
-        LeakyReLU(alpha=0.1),
+        LeakyReLU(negative_slope=0.1),
+        Conv2D(128, (3, 3), padding='same'),
+        BatchNormalization(),
+        LeakyReLU(negative_slope=0.1),
         MaxPooling2D(pool_size=(2, 2)),
-        Dropout(0.3),
+        SpatialDropout2D(0.3),
 
         # Flatten + Dense
         Flatten(),
-        Dense(128),
+        Dense(256),
         BatchNormalization(),
-        LeakyReLU(alpha=0.1),
+        LeakyReLU(negative_slope=0.1),
         Dropout(0.5),
 
         # Output
