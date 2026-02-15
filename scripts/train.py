@@ -5,9 +5,10 @@ Trains a simple model, saves architecture, and creates initial checkpoint.
 
 import os
 import datetime
+import pickle
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import Sequential
+from tensorflow.keras import Sequential, Input
 from tensorflow.keras.layers import (
     Conv2D, BatchNormalization, LeakyReLU, MaxPooling2D,
     Dropout, Flatten, Dense
@@ -17,13 +18,13 @@ from tensorflow.keras.callbacks import (
     TensorBoard, EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 )
 from preprocess import (
-    load_and_preprocess_data, DATA_DIR, ensure_dir
+    load_and_preprocess_data, DATA_DIR, RESULTS_DIR,
+    ensure_dir, evaluate_model, EMOTION_LABELS_LIST
 )
 
 # ────────────────────────────────────────────────
 #               Configuration
 # ────────────────────────────────────────────────
-RESULTS_DIR = 'results'
 MODEL_DIR = os.path.join(RESULTS_DIR, 'model')
 LOGS_DIR = os.path.join(RESULTS_DIR, 'logs')
 BASELINE_MODEL_PATH = os.path.join(MODEL_DIR, 'baseline_model.keras')
@@ -42,7 +43,8 @@ ensure_dir(LOGS_DIR)
 def build_baseline_model(input_shape=(48, 48, 1), num_classes=7):
     model = Sequential([
         # Block 1
-        Conv2D(32, (3, 3), padding='same', input_shape=input_shape),
+        Input(shape=input_shape),
+        Conv2D(32, (3, 3), padding='same'),
         BatchNormalization(),
         LeakyReLU(alpha=0.1),
         MaxPooling2D(pool_size=(2, 2)),
@@ -94,6 +96,7 @@ def get_callbacks():
         patience=8,
         restore_best_weights=True,
         verbose=1,
+        mode='min',
         min_delta=0.001       # Only stop if improvement is less than 0.1% to avoid stopping on minor fluctuations
     )
 
@@ -113,7 +116,6 @@ def get_callbacks():
         verbose=1,
         cooldown=2   # Wait for 2 epochs after reducing LR before monitoring again to avoid rapid reductions
     )
-
 
     return [tensorboard, early_stop, checkpoint, reduce_lr]
 
