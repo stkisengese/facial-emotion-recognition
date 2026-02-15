@@ -158,9 +158,21 @@ def main():
         verbose=1
     )
 
-    # Save training history
-    import pickle
+    # ────────────────────────────────────────────────
+    #  Quick test-set evaluation after training
+    # ────────────────────────────────────────────────
+    print("\nEvaluating on labeled test set (test_with_emotions.csv)...")
 
+    X_test, y_test = load_and_preprocess_data(
+        os.path.join(DATA_DIR, 'test_with_emotions.csv'),
+        split='test'
+    )
+
+    if y_test is not None:
+        test_acc = evaluate_model(model, X_test, y_test, EMOTION_LABELS_LIST)
+        print(f"→ This is the number we'll try to push >60% in iterations: {test_acc:.4f}")
+
+    # Save training history for later analysis (validation curves)
     history_dict = history.history
     with open(os.path.join(MODEL_DIR, 'baseline_history.pkl'), 'wb') as f:
         pickle.dump(history_dict, f)
