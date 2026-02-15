@@ -8,11 +8,16 @@ import numpy as np
 import pandas as pd
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Configuration
 DATA_DIR = 'data'
 IMG_SIZE = 48
 NUM_CLASSES = 7
+RESULTS_DIR = 'results'
 
 EMOTION_LABELS = {
     0: 'Angry',
@@ -23,6 +28,7 @@ EMOTION_LABELS = {
     5: 'Surprise',
     6: 'Neutral'
 }
+EMOTION_LABELS_LIST = list(EMOTION_LABELS.values())  # ['Angry', 'Disgust', ...]
 
 def ensure_dir(directory):
     """Create directory if it doesn't exist."""
@@ -93,8 +99,6 @@ def load_and_preprocess_data(
         return X, y if has_labels else None
     
     # For training: split into train/val
-    from sklearn.model_selection import train_test_split
-    
     X_train, X_val, y_train, y_val = train_test_split(
         X, y,
         test_size=val_split,
@@ -135,6 +139,51 @@ def get_test_data(labeled=True):
     X, y = load_and_preprocess_data(path, split='test')
     return X, y
 
+def evaluate_model(model, X, y_true, emotion_labels=None, print_report=True):
+    """
+    Evaluate model on test set and print key metrics.
+    
+    Args:
+        model: trained Keras model
+        X: preprocessed test images (N,48,48,1)
+        y_true: one-hot or integer labels
+        emotion_labels: list of str names (optional)
+        print_report: whether to print detailed classification report
+    
+    Returns:
+        test_accuracy (float)
+    """
+    if y_true is None:
+        print("No ground truth labels → cannot compute accuracy")
+        return None
+    
+    # Predict
+    y_pred_prob = model.predict(X, batch_size=64, verbose=1)
+    y_pred = np.argmax(y_pred_prob, axis=1)
+    y_true_int = np.argmax(y_true, axis=1) if y_true.ndim == 2 else y_true
+    
+    acc = accuracy_score(y_true_int, y_pred)
+    print(f"\nTest set accuracy: {acc:.4f} ({acc*100:.2f}%)")
+    
+    if print_report and emotion_labels:
+        print("\nClassification Report:")
+        print(classification_report(y_true_int, y_pred, target_names=emotion_labels))
+    
+    # confusion matrix plot
+    if print_report:
+        cm = confusion_matrix(y_true_int, y_pred)
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=emotion_labels, yticklabels=emotion_labels)
+        plt.ylabel('True')
+        plt.xlabel('Predicted')
+        plt.title('Confusion Matrix - Test Set')
+        cm_path = os.path.join(RESULTS_DIR, 'model', 'test_confusion_matrix.png')
+        plt.savefig(cm_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"Confusion matrix saved: {cm_path}")
+    
+    return acc
 
 # Test the preprocessing pipeline
 if __name__ == "__main__":
@@ -150,7 +199,6 @@ if __name__ == "__main__":
         )
         
         # Save one sample image to verify
-        import matplotlib.pyplot as plt
         plt.imsave(
             'results/preprocessing_test/sample_normalized.png',
             X_tr[0].squeeze(),
