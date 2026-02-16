@@ -127,3 +127,10 @@ if __name__ == "__main__":
     load_face_cascade()
     
     main(source)
+
+# #  Usage
+# # Webcam (default)
+# python scripts/predict_live_stream.py
+
+# # Use a recorded video instead (fallback / test)
+# python scripts/predict_live_stream.py path/to/your/test_video_20s.mp4
