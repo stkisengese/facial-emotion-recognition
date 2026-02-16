@@ -29,7 +29,7 @@ EMOTIONS = EMOTION_LABELS_LIST  # list of 7 strings
 
 def draw_prediction(frame, emotion, confidence, bbox=None):
     """Overlay prediction text and bounding box on frame."""
-    
+
     color = (0, 255, 0) if confidence > 70 else (0, 165, 255)  # green if confident, orange otherwise
     
     text = f"{emotion}: {confidence:.0f}%"
@@ -43,3 +43,72 @@ def draw_prediction(frame, emotion, confidence, bbox=None):
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
 
     return frame
+
+def main(video_source=0):
+    """
+    Main loop for real-time prediction.
+    
+    video_source: 0 = default webcam, or path to .mp4 file
+    """
+    print("Reading video stream ...")
+    cap = cv2.VideoCapture(video_source)
+    
+    if not cap.isOpened():
+        print(f"Error: Could not open source {video_source}")
+        return
+    
+    # Timing control: predict once per second
+    last_prediction_time = time.time()
+    frame_count = 0
+    
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            print("End of video stream or error reading frame.")
+            break
+        
+        current_time = time.time()
+        
+        # Predict only once per second
+        if current_time - last_prediction_time >= 1.0:
+            print("Preprocessing ...")
+            
+            face, bbox = detect_and_crop_face(frame)
+            
+            if face is not None:
+                # Add batch dimension → (1, 48, 48, 1)
+                face_batch = np.expand_dims(face, axis=0)
+                
+                # Inference
+                predictions = model.predict(face_batch, verbose=0)[0]
+                emotion_idx = np.argmax(predictions)
+                confidence = predictions[emotion_idx] * 100
+                
+                emotion = EMOTIONS[emotion_idx]
+                
+                # Print in required format
+                timestamp = time.strftime("%H:%M:%S")
+                print(f"{timestamp}s : {emotion} , {confidence:.0f}%")
+                
+                # Overlay on frame
+                frame = draw_prediction(frame, emotion, confidence, bbox)
+            else:
+                print("No face detected")
+                # Optional: show message on frame
+                cv2.putText(frame, "No face detected", (10, 30),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            
+            last_prediction_time = current_time
+        
+        # Always show the live feed
+        cv2.imshow('Emotion Detection - Press q to quit', frame)
+        
+        # Exit on 'q'
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+        
+        frame_count += 1
+    
+    cap.release()
+    cv2.destroyAllWindows()
+    print(f"Processed {frame_count} frames. Session ended.")
