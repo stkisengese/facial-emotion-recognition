@@ -262,6 +262,178 @@ def preprocess_frame_for_inference(frame):
         return None, None
     return face, bbox
 
+# ────────────────────────────────────────────────
+#     Preprocessing Test: Extract faces from video
+# ────────────────────────────────────────────────
+
+def preprocess_video_test(
+    video_path,
+    output_dir,
+    extract_fps=1.0,
+    show_preview=False
+):
+    """
+    Process a video file: detect faces, crop to 48×48 grayscale normalized,
+    save one image per second (or at extract_fps rate).
+    
+    Args:
+        video_path: path to input .mp4 or webcam-capable source
+        output_dir: where to save cropped images + copy of input video
+        extract_fps: how many extractions per second (default 1.0 = one per sec)
+        show_preview: show OpenCV windows during processing (for debugging)
+    
+    Returns:
+        int: number of successfully saved face images
+    """
+    ensure_dir(output_dir)
+    
+    cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+        raise ValueError(f"Cannot open video: {video_path}")
+    
+    # Video properties
+    video_fps = cap.get(cv2.CAP_PROP_FPS)
+    if video_fps <= 0:
+        video_fps = 30.0  # fallback
+    frame_interval = int(video_fps / extract_fps)
+    
+    print(f"Video FPS: {video_fps:.1f} → extracting every {frame_interval} frames "
+          f"(≈ {extract_fps} per second)")
+    
+    frame_count = 0
+    saved_count = 0
+    
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        
+        if frame_count % frame_interval == 0:
+            face, bbox = detect_and_crop_face(frame)
+            
+            if face is not None:
+                # Save normalized face (multiply back by 255 for 8-bit PNG)
+                save_path = os.path.join(output_dir, f"image{saved_count}.png")
+                cv2.imwrite(save_path, (face.squeeze() * 255).astype(np.uint8))
+                print(f"Saved face crop: {save_path}")
+                saved_count += 1
+                
+                # Optional: draw box on original frame for preview
+                if bbox and show_preview:
+                    x, y, w, h = bbox
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                    cv2.putText(frame, f"Face {saved_count}", (x, y-10),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+        
+        if show_preview:
+            cv2.imshow("Video Processing - Face Detection", frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        
+        frame_count += 1
+    
+    cap.release()
+    if show_preview:
+        cv2.destroyAllWindows()
+    
+    # Copy original video to output dir for reference
+    import shutil
+    video_filename = os.path.basename(video_path)
+    shutil.copy(video_path, os.path.join(output_dir, f"input_{video_filename}"))
+    
+    print(f"\nPreprocessing complete.")
+    print(f"Processed {frame_count} frames")
+    print(f"Saved {saved_count} face images to {output_dir}")
+    print(f"Input video copied to: input_{video_filename}")
+    
+    return saved_count
+
+# ────────────────────────────────────────────────
+#     Preprocessing Test: Extract faces from video
+# ────────────────────────────────────────────────
+
+def preprocess_video_test(
+    video_path,
+    output_dir,
+    extract_fps=1.0,
+    show_preview=False
+):
+    """
+    Process a video file: detect faces, crop to 48×48 grayscale normalized,
+    save one image per second (or at extract_fps rate).
+    
+    Args:
+        video_path: path to input .mp4 or webcam-capable source
+        output_dir: where to save cropped images + copy of input video
+        extract_fps: how many extractions per second (default 1.0 = one per sec)
+        show_preview: show OpenCV windows during processing (for debugging)
+    
+    Returns:
+        int: number of successfully saved face images
+    """
+    ensure_dir(output_dir)
+    
+    cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+        raise ValueError(f"Cannot open video: {video_path}")
+    
+    # Video properties
+    video_fps = cap.get(cv2.CAP_PROP_FPS)
+    if video_fps <= 0:
+        video_fps = 30.0  # fallback
+    frame_interval = int(video_fps / extract_fps)
+    
+    print(f"Video FPS: {video_fps:.1f} → extracting every {frame_interval} frames "
+          f"(≈ {extract_fps} per second)")
+    
+    frame_count = 0
+    saved_count = 0
+    
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        
+        if frame_count % frame_interval == 0:
+            face, bbox = detect_and_crop_face(frame)
+            
+            if face is not None:
+                # Save normalized face (multiply back by 255 for 8-bit PNG)
+                save_path = os.path.join(output_dir, f"image{saved_count}.png")
+                cv2.imwrite(save_path, (face.squeeze() * 255).astype(np.uint8))
+                print(f"Saved face crop: {save_path}")
+                saved_count += 1
+                
+                # Optional: draw box on original frame for preview
+                if bbox and show_preview:
+                    x, y, w, h = bbox
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                    cv2.putText(frame, f"Face {saved_count}", (x, y-10),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+        
+        if show_preview:
+            cv2.imshow("Video Processing - Face Detection", frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        
+        frame_count += 1
+    
+    cap.release()
+    if show_preview:
+        cv2.destroyAllWindows()
+    
+    # Copy original video to output dir for reference
+    import shutil
+    video_filename = os.path.basename(video_path)
+    shutil.copy(video_path, os.path.join(output_dir, f"input_{video_filename}"))
+    
+    print(f"\nPreprocessing complete.")
+    print(f"Processed {frame_count} frames")
+    print(f"Saved {saved_count} face images to {output_dir}")
+    print(f"Input video copied to: input_{video_filename}")
+    
+    return saved_count
+
 # Test the preprocessing pipeline
 if __name__ == "__main__":
     ensure_dir('results/preprocessing_test')
@@ -288,7 +460,7 @@ if __name__ == "__main__":
         
     except Exception as e:
         print(f"Preprocessing test failed: {e}")
-        
+
 
 # ────────────────────────────────────────────────
 #          Quick test with webcam or video
