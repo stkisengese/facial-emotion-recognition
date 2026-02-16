@@ -207,6 +207,61 @@ def load_face_cascade():
         print("Haar Cascade loaded successfully.")
     return face_cascade
 
+def detect_and_crop_face(frame, target_size=(48, 48), min_size=(40, 40)):
+    """
+    Detect the largest face in a BGR frame, crop, convert to 48×48 grayscale,
+    normalize to [0,1], add channel dimension.
+    
+    Returns:
+        face_array (np.ndarray): shape (48,48,1) or None if no face
+        (x,y,w,h): bounding box or None
+    """
+    if face_cascade is None:
+        load_face_cascade()
+    
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    
+    faces = face_cascade.detectMultiScale(
+        gray,
+        scaleFactor=1.1,        # how much size reduction at each scale
+        minNeighbors=5,         # higher → fewer false positives
+        minSize=min_size
+    )
+    
+    if len(faces) == 0:
+        return None, None
+    
+    # Take the largest face (most common heuristic)
+    (x, y, w, h) = max(faces, key=lambda r: r[2] * r[3])
+    
+    # Crop with small margin for context (helps emotion detection)
+    margin = int(0.15 * w)
+    x1 = max(0, x - margin)
+    y1 = max(0, y - margin)
+    x2 = min(gray.shape[1], x + w + margin)
+    y2 = min(gray.shape[0], y + h + margin)
+    
+    face_gray = gray[y1:y2, x1:x2]
+    
+    # Resize to exactly 48×48
+    face_resized = cv2.resize(face_gray, target_size)
+    
+    # Normalize [0,255] → [0,1]
+    face_norm = face_resized.astype('float32') / 255.0
+    
+    # Add channel dimension for CNN
+    face_final = np.expand_dims(face_norm, axis=-1)   # (48,48,1)
+    
+    return face_final, (x, y, w, h)
+
+
+def preprocess_frame_for_inference(frame):
+    """Convenience wrapper for live stream / prediction."""
+    face, bbox = detect_and_crop_face(frame)
+    if face is None:
+        return None, None
+    return face, bbox
+
 # Test the preprocessing pipeline
 if __name__ == "__main__":
     ensure_dir('results/preprocessing_test')
