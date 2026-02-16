@@ -4,6 +4,7 @@ Handles pixel string parsing, normalization, augmentation, and dataset loading.
 """
 
 import os
+import cv2
 import numpy as np
 import pandas as pd
 from tensorflow.keras.utils import to_categorical
@@ -184,6 +185,27 @@ def evaluate_model(model, X, y_true, emotion_labels=None, print_report=True):
         print(f"Confusion matrix saved: {cm_path}")
     
     return acc
+
+# ────────────────────────────────────────────────
+#          Face Detection & Preprocessing for Video
+# ────────────────────────────────────────────────
+
+# Global cascade classifier (loaded once)
+face_cascade = None
+
+def load_face_cascade():
+    global face_cascade
+    if face_cascade is None:
+        cascade_path = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+        if not os.path.exists(cascade_path):
+            raise FileNotFoundError(
+                f"Haar cascade not found: {cascade_path}\n"
+                "OpenCV should include it. If missing, download from:\n"
+                "https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml"
+            )
+        face_cascade = cv2.CascadeClassifier(cascade_path)
+        print("Haar Cascade loaded successfully.")
+    return face_cascade
 
 # Test the preprocessing pipeline
 if __name__ == "__main__":
