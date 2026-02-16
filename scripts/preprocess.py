@@ -288,3 +288,41 @@ if __name__ == "__main__":
         
     except Exception as e:
         print(f"Preprocessing test failed: {e}")
+        
+
+# ────────────────────────────────────────────────
+#          Quick test with webcam or video
+# ────────────────────────────────────────────────
+
+if __name__ == "__main__" and False:  # change to True to test
+    cap = cv2.VideoCapture(0)  # 0 = default webcam
+    
+    if not cap.isOpened():
+        print("Cannot open webcam")
+        exit()
+    
+    print("Press 'q' to quit. Showing face detection...")
+    
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        
+        face, bbox = detect_and_crop_face(frame)
+        
+        if face is not None:
+            # Draw rectangle
+            if bbox:
+                x,y,w,h = bbox
+                cv2.rectangle(frame, (x,y), (x+w,y+h), (0,255,0), 2)
+            
+            # Show small preview of cropped face
+            cv2.imshow("Cropped face (48x48)", face.squeeze())
+        
+        cv2.imshow("Webcam - Face Detection", frame)
+        
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    
+    cap.release()
+    cv2.destroyAllWindows()
