@@ -112,3 +112,18 @@ def main(video_source=0):
     cap.release()
     cv2.destroyAllWindows()
     print(f"Processed {frame_count} frames. Session ended.")
+
+if __name__ == "__main__":
+    import sys
+    
+    source = 0  # default: webcam
+    
+    if len(sys.argv) > 1:
+        # Use provided video file instead
+        source = sys.argv[1]
+        print(f"Using video file as input: {source}")
+    
+    # Make sure cascade is loaded
+    load_face_cascade()
+    
+    main(source)
