@@ -476,6 +476,17 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Preprocessing test failed: {e}")
 
+# ──────────────────────────────────────────────
+# Quick test with video preprocessing
+# ──────────────────────────────────────────────
+if __name__ == "__main__" and False:  # change to True to test video preprocessing
+    preprocess_video_test(
+        "results/preprocessing_test/input_video.mp4", # ensure this file exists or change path
+        "results/preprocessing_test", # output dir for cropped faces + copy of input video
+        extract_fps=1.0,
+        show_preview=False
+    )
+
 
 # ────────────────────────────────────────────────
 #          Quick test with webcam or video
