@@ -17,7 +17,7 @@ from preprocess import (
 # ────────────────────────────────────────────────
 #               Configuration
 # ────────────────────────────────────────────────
-MODEL_PATH = 'results/model/baseline_model.keras'  # ← update to your best model, e.g. vgg_style_model.keras
+MODEL_PATH = 'results/model/final_emotion_model.keras'  # ← update to your best model, e.g. vgg_style_model.keras
 
 # Load model once
 print("Loading model...")
@@ -50,7 +50,7 @@ def main(video_source=0):
     
     video_source: 0 = default webcam, or path to .mp4 file
     """
-    print("Reading video stream ...")
+    print("\n\033[32mReading video stream ...\033[0m")
     cap = cv2.VideoCapture(video_source)
     
     if not cap.isOpened():
@@ -64,14 +64,14 @@ def main(video_source=0):
     while True:
         ret, frame = cap.read()
         if not ret:
-            print("End of video stream or error reading frame.")
+            print("\nEnd of video stream or error reading frame.")
             break
         
         current_time = time.time()
         
         # Predict only once per second
         if current_time - last_prediction_time >= 1.0:
-            print("Preprocessing ...")
+            print("\033[32mPreprocessing ...\033[0m")
             
             face, bbox = detect_and_crop_face(frame)
             
@@ -88,7 +88,7 @@ def main(video_source=0):
                 
                 # Print in required format
                 timestamp = time.strftime("%H:%M:%S")
-                print(f"{timestamp}s : {emotion} , {confidence:.0f}%")
+                print(f"\n\033[32m{timestamp}s : {emotion} , {confidence:.0f}%\033[0m")
                 
                 # Overlay on frame
                 frame = draw_prediction(frame, emotion, confidence, bbox)
@@ -111,7 +111,7 @@ def main(video_source=0):
     
     cap.release()
     cv2.destroyAllWindows()
-    print(f"Processed {frame_count} frames. Session ended.")
+    print(f"Processed {frame_count} frames. Session ended.\n")
 
 if __name__ == "__main__":
     import sys
@@ -134,3 +134,5 @@ if __name__ == "__main__":
 
 # # Use a recorded video instead (fallback / test)
 # python scripts/predict_live_stream.py path/to/your/test_video_20s.mp4
+# python scripts/predict_live_stream.py results/preprocessing_test/input_video.mp4
+# Note: If using a video file, ensure it has faces and is not too long (20s max recommended) for testing.

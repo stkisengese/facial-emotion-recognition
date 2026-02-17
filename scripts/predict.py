@@ -47,7 +47,7 @@ def main():
 
     if acc is not None:
         # Exactly the required output format
-        print(f"\nAccuracy on test set: {acc*100:.0f}%")
+        print(f"\n\033[32mAccuracy on test set: {acc*100:.0f}%\033[0m\n")
 
 
 if __name__ == "__main__":

@@ -164,11 +164,11 @@ def evaluate_model(model, X, y_true, emotion_labels=None, print_report=True):
     y_true_int = np.argmax(y_true, axis=1) if y_true.ndim == 2 else y_true
     
     acc = accuracy_score(y_true_int, y_pred)
-    print(f"\nTest set accuracy: {acc:.4f} ({acc*100:.2f}%)")
+    print(f"\n\033[35mTest set accuracy: {acc:.4f} ({acc*100:.2f}%)\033[0m")
     
     if print_report and emotion_labels:
         print("\nClassification Report:")
-        print(classification_report(y_true_int, y_pred, target_names=emotion_labels))
+        print(f"\033[36m{classification_report(y_true_int, y_pred, target_names=emotion_labels)}\033[0m")
     
     # confusion matrix plot
     if print_report:
