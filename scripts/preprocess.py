@@ -423,14 +423,29 @@ def preprocess_video_test(
         cv2.destroyAllWindows()
     
     # Copy original video to output dir for reference
-    import shutil
-    video_filename = os.path.basename(video_path)
-    shutil.copy(video_path, os.path.join(output_dir, f"input_{video_filename}"))
+    target_video_name = os.path.join(output_dir, "input_video.mp4")
+
+    src_abs = os.path.abspath(video_path)
+    dst_abs = os.path.abspath(target_video_name)
+
+    if src_abs == dst_abs:
+        print(f"Input is already correctly named: {target_video_name}")
+    elif os.path.exists(target_video_name):
+        print(f"File {target_video_name} already exists — copy skipped (preserves existing reference)")
+        print("  → If this is a new test video, manually rename or delete the old input_video.mp4")
+    else:
+        import shutil
+        shutil.copy(video_path, target_video_name)
+        print(f"Input video copied as reference: {target_video_name}")
     
-    print(f"\nPreprocessing complete.")
-    print(f"Processed {frame_count} frames")
-    print(f"Saved {saved_count} face images to {output_dir}")
-    print(f"Input video copied to: input_{video_filename}")
+    # Print summary
+    print(f"\nPreprocessing test summary:")
+    print(f"  - Processed frames: {frame_count}")
+    print(f"  - Saved face images: {saved_count}")
+    if saved_count < 20:
+        print(f"  → WARNING: Fewer than 20 faces detected. Check lighting/angle/distance.")
+    else:
+        print("  → Success: ≥20 face crops saved.")
     
     return saved_count
 
