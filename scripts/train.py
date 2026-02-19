@@ -1,5 +1,5 @@
 """
-Baseline CNN training for Facial Emotion Recognition.
+Final CNN training for Facial Emotion Recognition.
 Trains a simple model, saves architecture, and creates initial checkpoint.
 """
 
@@ -27,8 +27,8 @@ from preprocess import (
 # ────────────────────────────────────────────────
 MODEL_DIR = os.path.join(RESULTS_DIR, 'model')
 LOGS_DIR = os.path.join(RESULTS_DIR, 'logs')
-BASELINE_MODEL_PATH = os.path.join(MODEL_DIR, 'baseline_model.keras')
-ARCH_TXT_PATH = os.path.join(MODEL_DIR, 'baseline_arch.txt')
+FINAL_MODEL_PATH = os.path.join(MODEL_DIR, 'final_model.keras')
+ARCH_TXT_PATH = os.path.join(MODEL_DIR, 'model_summary.txt')
 
 BATCH_SIZE = 64
 EPOCHS = 100        # We'll use early stopping so likely < 30
@@ -38,9 +38,9 @@ ensure_dir(MODEL_DIR)
 ensure_dir(LOGS_DIR)
 
 # ────────────────────────────────────────────────
-#               Build Baseline Model
+#               Build CNN Model
 # ────────────────────────────────────────────────
-def build_baseline_model(input_shape=(48, 48, 1), num_classes=7):
+def build_cnn_model(input_shape=(48, 48, 1), num_classes=7):
     model = Sequential([
         # Block 1
         Input(shape=input_shape),
@@ -97,7 +97,7 @@ def build_baseline_model(input_shape=(48, 48, 1), num_classes=7):
 # ────────────────────────────────────────────────
 def get_callbacks():
     timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    log_dir = os.path.join(LOGS_DIR, f"baseline_{timestamp}")
+    log_dir = os.path.join(LOGS_DIR, f"model_{timestamp}")
 
     tensorboard = TensorBoard(
         log_dir=log_dir,
@@ -117,7 +117,7 @@ def get_callbacks():
     )
 
     checkpoint = ModelCheckpoint(
-        BASELINE_MODEL_PATH,
+        FINAL_MODEL_PATH,
         monitor='val_accuracy',
         save_best_only=True,
         mode='max',
@@ -139,7 +139,7 @@ def get_callbacks():
 #               Main Training Flow
 # ────────────────────────────────────────────────
 def main():
-    print("Starting Baseline CNN Training...")
+    print("Starting CNN Model Training...")
 
     # Load data with augmentation
     (X_train, y_train), (X_val, y_val), datagen = load_and_preprocess_data(
@@ -149,12 +149,12 @@ def main():
         val_split=0.2
     )
 
-    model = build_baseline_model()
+    model = build_cnn_model()
     model.summary()
 
     # Save architecture to text file
     with open(ARCH_TXT_PATH, 'w') as f:
-        f.write("=== BASELINE MODEL ARCHITECTURE (Issue #4) ===\n\n")
+        f.write("=== FINAL MODEL ARCHITECTURE ===\n\n")
         model.summary(print_fn=lambda x: f.write(x + '\n'))
         f.write("\n\nHyperparameters:\n")
         f.write(f"Batch size:     {BATCH_SIZE}\n")
@@ -192,20 +192,15 @@ def main():
 
     # Save training history for later analysis (validation curves)
     history_dict = history.history
-    with open(os.path.join(MODEL_DIR, 'baseline_history.pkl'), 'wb') as f:
+    with open(os.path.join(MODEL_DIR, 'final_model_history.pkl'), 'wb') as f:
         pickle.dump(history_dict, f)
-    print(f"Training history saved to: {os.path.join(MODEL_DIR, 'baseline_history.pkl')}")
+    print(f"Training history saved to: {os.path.join(MODEL_DIR, 'final_model_history.pkl')}")
 
     # Quick final evaluation on validation set
     val_loss, val_acc = model.evaluate(X_val, y_val, verbose=0)
     print(f"\nFinal validation accuracy: {val_acc:.4f} ({val_acc*100:.2f}%)")
-    print(f"Model saved (best weights) at: {BASELINE_MODEL_PATH}")
-
-    print("\nDone. Next steps:")
-    print("1. Check results/model/baseline_arch.txt")
-    print("2. Launch TensorBoard: tensorboard --logdir results/logs")
-    print("3. Take screenshot → save as results/model/tensorboard.png")
-
+    print(f"Model saved (best weights) at: {FINAL_MODEL_PATH}")
+    
 
 if __name__ == "__main__":
     tf.random.set_seed(42)   # reproducibility
