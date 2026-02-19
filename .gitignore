@@ -6,10 +6,12 @@ venv/
 env/
 .env
 .venv
+*.json
 
 # Project specific
 data/*.csv
 # results/
+results/logs
 
 # Models
 *.h5
