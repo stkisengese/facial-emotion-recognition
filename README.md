@@ -101,10 +101,10 @@ facial-emotion-recognition/
 
 ```bash
 # Create & activate environment
-mamba env create -f environment.yml    # if you have one
+mamba env create -f environment.yml 
 # or manually:
-mamba create -n fer-emotion python=3.11
-mamba activate fer-emotion
+mamba create -n fer_env python=3.11
+mamba activate fer_env
 mamba install tensorflow opencv pandas numpy matplotlib seaborn scikit-learn
 
 # Install remaining pip packages
@@ -140,7 +140,7 @@ Place train.csv, test.csv, test_with_emotions in data/.
 python scripts/train.py
 
 # Monitor progress via TensorBoard
-tensorboard --logdir results/model/logs
+tensorboard --logdir results/logs
 ```
 
 ### 2. Evaluate on the test set
