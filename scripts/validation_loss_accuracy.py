@@ -1,5 +1,5 @@
 """
-Plot learning curves for baseline model to check that training 
+Plot learning curves for final trained model to check that training 
 stopped before clear overfitting (gap between train and val curves 
 not too wide at the end).
 Shows training stopped before clear overfitting
@@ -12,7 +12,7 @@ import numpy as np
 
 RESULTS_DIR = 'results'
 MODEL_DIR = os.path.join(RESULTS_DIR, 'model')
-HISTORY_PATH = os.path.join(MODEL_DIR, 'baseline_history.pkl')
+HISTORY_PATH = os.path.join(MODEL_DIR, 'final_model_history.pkl')
 CURVE_PATH = os.path.join(MODEL_DIR, 'learning_curves.png')
 
 def plot_learning_curves():
