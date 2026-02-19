@@ -88,7 +88,7 @@ def main(video_source=0):
                 
                 # Print in required format
                 timestamp = time.strftime("%H:%M:%S")
-                print(f"\n\033[32m{timestamp}s : {emotion} , {confidence:.0f}%\033[0m")
+                print(f"\033[32m{timestamp}s : {emotion} , {confidence:.0f}%\033[0m\n")
                 
                 # Overlay on frame
                 frame = draw_prediction(frame, emotion, confidence, bbox)
