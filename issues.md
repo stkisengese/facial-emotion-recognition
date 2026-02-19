@@ -227,7 +227,7 @@ Implement a baseline CNN architecture to establish performance benchmark before 
 
 ---
 
-## 📊 Issue #5: Integrate TensorBoard Monitoring (MANDATORY)
+## Issue #5: Integrate TensorBoard Monitoring (MANDATORY)
 
 **Labels:** `monitoring`, `priority-critical`, `tensorboard`  
 **Depends on:** #4
@@ -258,8 +258,8 @@ Set up TensorBoard for real-time training monitoring. This is **MANDATORY** per 
       callbacks=[tensorboard_callback, ...]
   )
   ```
-- [ ] Test TensorBoard launch: `tensorboard --logdir results/logs`
-- [ ] Verify you can view:
+- [x] Test TensorBoard launch: `tensorboard --logdir results/logs`
+- [x] Verify you can view:
   - Loss curves (train and validation)
   - Accuracy curves (train and validation)
   - Model graph
@@ -268,7 +268,7 @@ Set up TensorBoard for real-time training monitoring. This is **MANDATORY** per 
 - [ ] Take screenshot during training and save as `results/model/tensorboard.png` (**REQUIRED**)
 
 ### Additional Monitoring
-- [ ] Add custom metrics logging (optional):
+- [x] Add custom metrics logging (optional):
   - Per-class accuracy
   - Confusion matrix callback
 
@@ -284,7 +284,7 @@ Set up TensorBoard for real-time training monitoring. This is **MANDATORY** per 
 
 ---
 
-## 🛑 Issue #6: Implement Early Stopping and Callbacks
+## Issue #6: Implement Early Stopping and Callbacks
 
 **Labels:** `training`, `priority-high`, `callbacks`  
 **Depends on:** #5
@@ -337,7 +337,7 @@ Prevent overfitting by implementing early stopping and model checkpointing.
       reduce_lr
   ]
   ```
-- [ ] Test training with callbacks (run for many epochs, verify early stopping triggers)
+- [x] Test training with callbacks (run for many epochs, verify early stopping triggers)
 - [x] Document callback configuration in `README.md`
 
 ### Acceptance Criteria
@@ -352,7 +352,7 @@ Prevent overfitting by implementing early stopping and model checkpointing.
 
 ---
 
-## 🎨 Issue #7: Create Learning Curves Visualization
+## Issue #7: Create Learning Curves Visualization
 
 **Labels:** `visualization`, `priority-high`, `plotting`  
 **Depends on:** #6
@@ -395,12 +395,12 @@ Create and save learning curves showing training stopped before overfitting (REQ
   plt.tight_layout()
   plt.savefig('results/model/learning_curves.png', dpi=300)
   ```
-- [ ] Verify plot shows:
+- [x] Verify plot shows:
   - Clear divergence point (where overfitting would start)
   - Early stopping marker
   - Final achieved accuracy
-- [ ] Save as `results/model/learning_curves.png` (**REQUIRED**)
-- [ ] Add plot to `README.md`
+- [x] Save as `results/model/learning_curves.png` (**REQUIRED**)
+- [x] Add plot to `README.md`
 
 ### Acceptance Criteria
 - Learning curves plotted correctly
@@ -414,7 +414,7 @@ Create and save learning curves showing training stopped before overfitting (REQ
 
 ---
 
-## 🚀 Issue #8: Optimize CNN Architecture (Achieve >60% Accuracy)
+## Issue #8: Optimize CNN Architecture (Achieve >60% Accuracy)
 
 **Labels:** `model`, `priority-critical`, `optimization`  
 **Depends on:** #7
@@ -509,7 +509,7 @@ model = Sequential([
 
 ---
 
-## 📝 Issue #9: Create Model Architecture Documentation
+## Issue #9: Create Model Architecture Documentation
 
 **Labels:** `documentation`, `priority-high`, `deliverable`  
 **Depends on:** #8
@@ -600,7 +600,7 @@ Added data augmentation: 62.5% → SUCCESS!
 
 ---
 
-## 🎥 Issue #10: Implement Face Detection for Video Preprocessing
+## Issue #10: Implement Face Detection for Video Preprocessing
 
 **Labels:** `opencv`, `priority-high`, `preprocessing`  
 **Depends on:** #8
@@ -609,12 +609,12 @@ Added data augmentation: 62.5% → SUCCESS!
 Implement face detection using OpenCV to preprocess video frames (required for real-time prediction).
 
 ### Tasks
-- [ ] Research face detection methods:
+- [x] Research face detection methods:
   - Haar Cascade (fastest, good for frontal faces)
   - dlib (more accurate but slower)
   - MTCNN (most accurate but slowest)
-- [ ] Choose Haar Cascade for speed (recommended)
-- [ ] Download Haar Cascade XML file:
+- [x] Choose Haar Cascade for speed (recommended)
+- [x] Download Haar Cascade XML file:
   ```python
   import cv2
   # OpenCV includes this by default
@@ -622,7 +622,7 @@ Implement face detection using OpenCV to preprocess video frames (required for r
       cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
   )
   ```
-- [ ] Implement face detection function in `scripts/preprocess.py`:
+- [x] Implement face detection function in `scripts/preprocess.py`:
   ```python
   def detect_face(frame):
       """
@@ -661,17 +661,17 @@ Implement face detection using OpenCV to preprocess video frames (required for r
       
       return face_final
   ```
-- [ ] Test face detection on sample images:
+- [x] Test face detection on sample images:
   - Test with frontal face
   - Test with side face
   - Test with multiple faces
   - Test with no face
-- [ ] Handle edge cases:
+- [x] Handle edge cases:
   - No face detected → skip frame or use previous detection
   - Multiple faces → use largest face
   - Face too small → skip frame
-- [ ] Visualize detection (draw rectangle around detected face)
-- [ ] Document face detection parameters in code
+- [x] Visualize detection (draw rectangle around detected face)
+- [x] Document face detection parameters in code
 
 ### Acceptance Criteria
 - Face detection works reliably on various images
@@ -685,7 +685,7 @@ Implement face detection using OpenCV to preprocess video frames (required for r
 
 ---
 
-## 📹 Issue #11: Create Preprocessing Test Pipeline
+## Issue #11: Create Preprocessing Test Pipeline
 
 **Labels:** `testing`, `priority-high`, `video-processing`  
 **Depends on:** #10
@@ -694,9 +694,9 @@ Implement face detection using OpenCV to preprocess video frames (required for r
 Build preprocessing test that extracts 1 face image per second from a 20-second video (REQUIRED deliverable).
 
 ### Tasks
-- [ ] Record or download a 20-second test video with a face
+- [x] Record or download a 20-second test video with a face
 - [ ] Save as `results/preprocessing_test/input_video.mp4`
-- [ ] Implement video processing in `scripts/preprocess.py`:
+- [x] Implement video processing in `scripts/preprocess.py`:
   ```python
   def preprocess_video(video_path, output_dir, fps=1):
       """
@@ -736,17 +736,17 @@ Build preprocessing test that extracts 1 face image per second from a 20-second 
       print(f"Total frames processed: {frame_count}")
       print(f"Total faces saved: {saved_count}")
   ```
-- [ ] Run preprocessing test:
+- [x] Run preprocessing test:
   ```bash
   python scripts/preprocess.py
   ```
-- [ ] Verify output:
+- [x] Verify output:
   - 20-21 images in `results/preprocessing_test/`
   - Each image is 48×48 grayscale
   - Faces properly centered and cropped
   - File naming: `image0.png`, `image1.png`, ..., `image20.png`
-- [ ] Visualize all extracted faces in a grid (optional but recommended)
-- [ ] Document preprocessing test in `README.md`
+- [x] Visualize all extracted faces in a grid (optional but recommended)
+- [x] Document preprocessing test in `README.md`
 
 ### Acceptance Criteria
 - 20-21 face images extracted from video
@@ -769,33 +769,33 @@ Build preprocessing test that extracts 1 face image per second from a 20-second 
 Create script to test model accuracy on test set (REQUIRED: `predict.py`).
 
 ### Tasks
-- [ ] Create `scripts/predict.py`
-- [ ] Load trained model:
+- [x] Create `scripts/predict.py`
+- [x] Load trained model:
   ```python
   from tensorflow import keras
   
   model = keras.models.load_model('results/model/final_emotion_model.keras')
   ```
-- [ ] Load and preprocess test data:
+- [x] Load and preprocess test data:
   ```python
   from preprocess import load_and_preprocess_data
   
   X_test, y_test = load_and_preprocess_data('data/test.csv')
   ```
-- [ ] Make predictions:
+- [x] Make predictions:
   ```python
   predictions = model.predict(X_test)
   predicted_classes = np.argmax(predictions, axis=1)
   true_classes = np.argmax(y_test, axis=1)
   ```
-- [ ] Calculate accuracy:
+- [x] Calculate accuracy:
   ```python
   from sklearn.metrics import accuracy_score
   
   accuracy = accuracy_score(true_classes, predicted_classes)
   print(f"Accuracy on test set: {accuracy*100:.0f}%")
   ```
-- [ ] Add confusion matrix (optional but recommended):
+- [x] Add confusion matrix (optional but recommended):
   ```python
   from sklearn.metrics import confusion_matrix, classification_report
   
@@ -807,12 +807,12 @@ Create script to test model accuracy on test set (REQUIRED: `predict.py`).
   print("\nClassification Report:")
   print(classification_report(true_classes, predicted_classes, target_names=emotion_labels))
   ```
-- [ ] Expected output format:
+- [x] Expected output format:
   ```
   Accuracy on test set: 62%
   ```
-- [ ] Test script: `python scripts/predict.py`
-- [ ] Verify output matches expected format
+- [x] Test script: `python scripts/predict.py`
+- [x] Verify output matches expected format
 
 ### Acceptance Criteria
 - Script loads model successfully
@@ -835,13 +835,13 @@ Create script to test model accuracy on test set (REQUIRED: `predict.py`).
 Create real-time emotion prediction from webcam stream (REQUIRED: `predict_live_stream.py`).
 
 ### Tasks
-- [ ] Create `scripts/predict_live_stream.py`
-- [ ] Load trained model:
+- [x] Create `scripts/predict_live_stream.py`
+- [x] Load trained model:
   ```python
   model = keras.models.load_model('results/model/final_emotion_model.keras')
   emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
   ```
-- [ ] Initialize webcam:
+- [x] Initialize webcam:
   ```python
   cap = cv2.VideoCapture(0)  # 0 for default webcam
   
@@ -849,7 +849,7 @@ Create real-time emotion prediction from webcam stream (REQUIRED: `predict_live_
       print("Error: Could not open webcam")
       exit()
   ```
-- [ ] Implement main prediction loop:
+- [x] Implement main prediction loop:
   ```python
   import time
   
@@ -900,13 +900,13 @@ Create real-time emotion prediction from webcam stream (REQUIRED: `predict_live_
   cap.release()
   cv2.destroyAllWindows()
   ```
-- [ ] Add visual feedback (draw emotion on frame):
+- [x] Add visual feedback (draw emotion on frame):
   ```python
   # After prediction, add text to frame
   cv2.putText(frame, f"{emotion_labels[emotion_idx]}: {confidence:.0f}%", 
               (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
   ```
-- [ ] Handle fallback to video file if webcam unavailable:
+- [x] Handle fallback to video file if webcam unavailable:
   ```python
   import sys
   
@@ -915,9 +915,9 @@ Create real-time emotion prediction from webcam stream (REQUIRED: `predict_live_
   else:
       cap = cv2.VideoCapture(0)  # Use webcam
   ```
-- [ ] Test with webcam
-- [ ] Test with recorded video file
-- [ ] Verify output format matches requirements:
+- [x] Test with webcam
+- [x] Test with recorded video file
+- [x] Verify output format matches requirements:
   ```
   Reading video stream ...
   Preprocessing ...
@@ -1065,8 +1065,8 @@ Create detailed performance analysis with confusion matrix and per-class metrics
 Write comprehensive README.md with project overview, setup instructions, and usage guide.
 
 ### Tasks
-- [ ] Update `README.md` with complete documentation
-- [ ] Include sections:
+- [x] Update `README.md` with complete documentation
+- [x] Include sections:
   - **Project Title and Description**
   - **Emotion Classes:** List of 7 emotions
   - **Dataset:** Link to Kaggle, statistics
