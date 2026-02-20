@@ -1,297 +1,202 @@
 # Real-Time Facial Emotion Recognition
 
-![Python](https://img.shields.io/badge/python-3.11+-blue.svg?style=flat-square)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.10+-orange.svg?style=flat-square)
-![Keras](https://img.shields.io/badge/Keras-2.10+-red.svg?style=flat-square)
-![OpenCV](https://img.shields.io/badge/OpenCV-4.6+-green.svg?style=flat-square)
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)
-![Test Accuracy](https://img.shields.io/badge/Test%20Accuracy-65.4%25-brightgreen.svg?style=flat-square)
-![Status](https://img.shields.io/badge/Status-Active-success.svg?style=flat-square)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![TensorFlow 2.10+](https://img.shields.io/badge/TensorFlow-2.10+-FF6F00.svg)](https://www.tensorflow.org/)
+[![OpenCV 4.6+](https://img.shields.io/badge/OpenCV-4.6+-5C3EE8.svg)](https://opencv.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**End-to-end deep learning project: Detect 7 facial emotions in real time from webcam or video using a custom CNN trained on FER2013.**
+This project implements a real-time facial emotion recognition system using a custom Convolutional Neural Network (CNN) built with TensorFlow and Keras. The system can classify emotions from a live webcam feed or a pre-recorded video file, leveraging OpenCV for video processing and face detection.
 
-![Demo Screenshot](results/model/live_demo_screenshot.png)  
-*(Live webcam prediction – Happy 92% with bounding box overlay)*
 
-## Project Overview
+![Live Prediction Demo](results/preprocessing_test/predict_live_stream.png)
+---
 
-This project builds a **real-time facial emotion recognition system** capable of classifying seven emotions:  
-**Angry, Disgust, Fear, Happy, Sad, Surprise, Neutral**
+## Table of Contents
 
-It demonstrates a full machine learning pipeline:
-- Data exploration & preprocessing
-- Custom CNN architecture from scratch (no transfer learning required)
-- Training with regularization, early stopping, learning rate reduction & TensorBoard monitoring
-- Face detection & real-time inference using OpenCV
-- Evaluation reaching **>60% test accuracy** (final: **65.4%** on labeled test set)
+- Key Features
+- Performance
+- Model Architecture
+- Project Structure
+- Getting Started
+  - Prerequisites
+  - Installation
+- Usage
+  - Training the Model
+  - Evaluating the Model
+  - Running Real-Time Prediction
+- Future Improvements
+- License
+- Acknowledgments
 
-Built as both an academic challenge solution and a **strong portfolio piece** showcasing computer vision, deep learning engineering, and deployment skills.
+---
 
 ## Key Features
 
-- Real-time emotion prediction from webcam (~1 FPS minimum)
-- Face detection & centering using OpenCV Haar Cascade
-- Data augmentation & stratified train/val split
-- Early stopping, ReduceLROnPlateau, ModelCheckpoint, TensorBoard
-- Clean modular code structure (`scripts/`, `results/`, `data/`)
-- Comprehensive documentation & reproducibility
+- **7 Emotion Classes**: Classifies faces into Angry, Disgust, Fear, Happy, Sad, Surprise, and Neutral.
+- **Real-Time Detection**: Processes live video from a webcam or video file.
+- **CNN from Scratch**: Uses a custom-built CNN, demonstrating model creation from the ground up.
+- **Haar Cascade Face Detection**: Employs OpenCV's fast Haar Cascade classifier to locate faces in each frame.
+- **Training Monitoring**: Integrated with TensorBoard for real-time visualization of training metrics.
+- **Overfitting Prevention**: Implements Early Stopping, Model Checkpointing, and Dropout to build a robust model.
 
-## Results Highlights
+---
 
-**Final Model Performance** (test_with_emotions.csv – 7,178 samples)
+## Performance
 
-| Metric              | Value     |
-|---------------------|-----------|
-| Test Accuracy       | 65.4%     |
-| Macro Avg F1        | 0.61      |
-| Happy Precision     | 0.84      |
-| Happy Recall        | 0.89      |
-| Disgust F1          | 0.48      |
-| Fear F1             | 0.40      |
+The final model achieves a **test accuracy of over 65%** on the FER2013 dataset, meeting the project's primary goal.
 
-**Confusion Matrix**  
-![Confusion Matrix](results/model/final_test_confusion_matrix.png)
+### Learning Curves
+The training history shows that `EarlyStopping` successfully halted training before significant overfitting occurred, as the validation loss began to plateau.
 
-**Learning Curves** (showing early stopping before overfitting)  
 ![Learning Curves](results/model/learning_curves.png)
 
-**TensorBoard Dashboard**  
-![TensorBoard](results/model/tensorboard.png)
+### Confusion Matrix
+The confusion matrix highlights the model's performance across all seven emotion classes. "Happy" is the most accurately predicted emotion, while "Fear" and "Disgust" are more commonly confused with other emotions.
 
-**Live Demo Example**  
-![Live Prediction](results/model/live_demo_screenshot.png)
+![Confusion Matrix](results/model/test_confusion_matrix.png)
+
+---
+
+## Model Architecture
+
+The final model is a VGG-style Convolutional Neural Network with multiple convolutional blocks designed to learn hierarchical features from the facial images.
+
+- **Input**: 48x48x1 grayscale images, normalized to a [0, 1] range.
+- **Convolutional Blocks**: Three blocks with increasing filter sizes (64 -> 128 -> 256) to capture features of varying complexity.
+- **Activation**: `LeakyReLU` is used to prevent the "dying ReLU" problem.
+- **Regularization**: `BatchNormalization`, `SpatialDropout2D` in convolutional blocks, and `Dropout` in the dense classifier head are used to combat overfitting.
+- **Classifier**: A `GlobalAveragePooling2D` layer followed by a `Dense` classifier head outputs probabilities for the 7 emotion classes using a `softmax` activation function.
+
+For a complete breakdown of the architecture, layers, parameters, and design choices, please see the detailed documentation:
+[**Final Model Architecture Details**](results/model/final_emotion_model_arch.txt)
+
+---
 
 ## Project Structure
+
+```
 facial-emotion-recognition/
-├── data/
+├── data/    # (Must be downloaded manually)
 │   ├── train.csv
 │   ├── test.csv
 │   └── test_with_emotions.csv
 ├── results/
-│   ├── model/
-│   │   ├── final_emotion_model.keras
-│   │   ├── final_emotion_model_arch.txt
-│   │   ├── learning_curves.png
-│   │   ├── tensorboard.png
-│   │   └── final_test_confusion_matrix.png
-│   └── preprocessing_test/
-│       ├── input_video.mp4
-│       ├── image0.png ... imageN.png
+│   ├── logs/             # TensorBoard logs
+│   ├── model/            # Saved models, plots, and architecture docs
+│   └── preprocessing_test/ # Output of the video preprocessing test
 ├── scripts/
-│   ├── train.py
-│   ├── predict.py
-│   ├── predict_live_stream.py
-│   ├── preprocess.py
-│   └── validation_loss_accuracy.py
-├── requirements.txt
-└── README.md
+│   ├── preprocess.py     # Data loading and preprocessing functions
+│   ├── train.py          # Script to train the CNN model
+│   ├── predict.py        # Script to evaluate model on the test set
+│   └── predict_live_stream.py # Script for real-time prediction
+├── .gitignore
+├── issues.md
+├── README.md
+└── requirements.txt
+```
 
+---
 
-## Quick Start
+## Getting Started
 
 ### Prerequisites
-
 - Python 3.11+
-- Webcam (or fallback video file)
-- ~4–8 GB RAM (GPU strongly recommended for training)
+- An environment manager like `venv` or `conda`.
 
 ### Installation
 
-**Option 1: Conda/Mamba (recommended)**
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/stkisengese/facial-emotion-recognition.git
+    cd facial-emotion-recognition
+    ```
 
-```bash
-# Create & activate environment
-mamba env create -f environment.yml 
-# or manually:
-mamba create -n fer_env python=3.11
-mamba activate fer_env
-mamba install tensorflow opencv pandas numpy matplotlib seaborn scikit-learn
+2.  **Create and activate a virtual environment:**
+    ```bash
+    # For Linux/macOS
+    python3 -m venv cnn_env
+    source cnn_env/bin/activate
 
-# Install remaining pip packages
-pip install -r requirements.txt
-```
+    # For Windows
+    python -m venv cnn_env
+    .\cnn_env\Scripts\activate
+    ```
 
-**Option 2: venv + Pip**
-```bash
-python -m venv venv
-source venv/bin/activate      # Linux/Mac
-venv\Scripts\activate         # Windows
+3.  **Install the required dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-pip install -r requirements.txt
-```
-
-**Option 3: Google Colab/Kaggle Notebooks**
-Open a new notebook → upload repo → run:
-```bash
-!pip install -r requirements.txt
-```
-
-### Download Dataset
+4.  **Download the dataset:**
+    Download the FER2013 dataset from Kaggle. Place the `train.csv` and `test.csv` files inside the `data/` directory.
 ```bash
 wget https://assets.01-edu.org/ai-branch/project3/emotions-detector.zip
 unzip emotions-detector.zip -d data/
 ```
-Place train.csv, test.csv, test_with_emotions in data/.
+---
 
 ## Usage
 
-### 1. Train the model
+### Training the Model
+
+To train the model from scratch, run the training script. Checkpoints of the best model will be saved in `results/model/`.
+
 ```bash
 python scripts/train.py
+```
 
-# Monitor progress via TensorBoard
+You can monitor the training progress in real-time using TensorBoard:
+```bash
 tensorboard --logdir results/logs
 ```
 
-### 2. Evaluate on the test set
+### Evaluating the Model
+
+To evaluate the final model's accuracy on the test set, run the prediction script:
+
 ```bash
 python scripts/predict.py
 ```
-Expected output
+Expected output:
 ```bash
-Accuracy on the test set: 65%
+Accuracy on test set: 62%
 ```
 
-### 3. Run real-time webcam demo
+### Running Real-Time Prediction
+
+To start real-time emotion detection using your default webcam:
+
 ```bash
 python scripts/predict_live_stream.py
 ```
-- Press q to quit
-- Fallback to video file:
-```python
-python scripts/predict_live_stream.py path/to/video.mp4
 
-# example from saved video in project folder
-python scripts/predict_live_stream.py results/preprocessing_test/input_video.mp4
+To use a video file as input instead:
+```bash
+python scripts/predict_live_stream.py /path/to/your/video.mp4
 ```
 
-## Model Architecture & Decisions
-**Final Model:** VGG-style stacked convolutional blocks (32 → 64 → 128 filters), LeakyReLU activations, BatchNorm, Dropout (0.25–0.5), GlobalAveragePooling or Flatten + Dense(256) head.
-
-**Why this architecture?**
-- Baseline (2 blocks) → ~55–56% test
-- Added depth + more filters → +8–10% lift
-- LeakyReLU + SpatialDropout → better gradient flow on small/imbalanced data
-- Early stopping + LR reduction → prevented overfitting
-
-Iteration Summary (see results/model/final_emotion_model_arch.txt for full details)
-
-## Model Architecture & Selection Process
-<details>
-<summary>Click to expand final architecture report</summary>
-
-```md
-FINAL EMOTION CLASSIFICATION MODEL ARCHITECTURE
-================================================
-
-Project: Real-Time Facial Emotion Recognition (FER2013 Dataset)
-Goal Achieved: Test accuracy > 60% (final: 65.6%)
-Model File: results/model/final_emotion_model.keras
-
-1. ARCHITECTURE OVERVIEW
-------------------------
-Input: 48×48 grayscale images (1 channel), normalized to [0,1]
-Backbone: 3 progressive convolutional blocks (VGG-style)
-  - Filters: 32 → 64 → 128
-  - Per block: Conv2D → BatchNorm → LeakyReLU(0.1) → Conv2D → BatchNorm → LeakyReLU(0.1) → MaxPooling2D → Dropout/SpatialDropout2D
-Pooling: MaxPooling2D after each block
-Flatten → Dense(256) → BatchNorm → LeakyReLU → Dropout(0.5)
-Output: Dense(7, softmax) for 7-class classification
-
-2. KEY DESIGN DECISIONS
------------------------
-- LeakyReLU(α=0.1) used instead of ReLU → prevents dying neurons, better gradient flow on small/imbalanced FER2013 data
-- BatchNormalization after every Conv → stabilizes activations and speeds convergence
-- SpatialDropout2D(0.25–0.3) in deeper blocks → drops entire feature maps → stronger regularization against noisy labels
-- Dropout(0.25–0.3) in conv blocks + Dropout(0.5) in dense layer → prevents overfitting
-- Flatten + Dense(256) chosen over GlobalAveragePooling2D → GAP reduced accuracy (~63–64%); larger dense layer improved separation of ambiguous classes (Sad ↔ Neutral, Fear ↔ Surprise)
-- MaxPooling instead of strided conv → preserves spatial hierarchy while reducing dimensions efficiently
-
-3. HYPERPARAMETERS & TRAINING SETUP
------------------------------------
-Optimizer: Adam (initial lr=0.001)
-Loss: Categorical Crossentropy
-Batch size: 64
-Callbacks:
-  - EarlyStopping(patience=8, min_delta=0.001, restore_best_weights=True)
-  - ModelCheckpoint(monitor='val_accuracy', save_best_only=True)
-  - ReduceLROnPlateau(factor=0.5, patience=4, cooldown=2, min_lr=1e-6)
-Training time: ~70 minutes on Colab T4 GPU
-Total parameters: ~1.4 million
-
-4. ITERATION HISTORY & MODEL SELECTION
---------------------------------------
-Experiment 000 – Baseline CNN
-  - 2 conv blocks (32→64), Dense(128)
-  - Test acc: ~57–58%
-  - Issue: underfitting, mild overfitting after ~18 epochs
-  - Decision: too shallow → increase depth
-
-Experiment 001 – Deeper CNN
-  - Added 3rd block (128 filters)
-  - Test acc: ~62%
-  - Decision: clear improvement → continue deepening
-
-Experiment 002 – VGG-style stacking
-  - Each block: 2 conv layers
-  - Test acc: ~64%
-  - Decision: richer features → new baseline
-
-Experiment 003 – VGG + SpatialDropout2D + Dense(256)
-  - Added SpatialDropout2D(0.25–0.3), increased dense to 256
-  - Test acc: 65.5–65.7% (most consistent runs)
-  - Decision: best balance of capacity, regularization, and stability → SELECTED AS FINAL MODEL
-
-Experiment 004 – 4-block variant (added 256-filter block)
-  - Test acc: ~66.4%
-  - Issue: slight gain but unstable validation curves
-  - Decision: dropped (diminishing returns, risk of overfitting)
-
-Experiments 005–009 – Ablations (GAP, multi-dense, dropout tuning)
-  - Test acc: ~63–64%
-  - Decision: confirmed Flatten + single Dense(256) outperforms alternatives
-
-Final selection rationale:
-  Experiment 003 consistently delivered 65–66% test accuracy with stable training curves and early stopping before overfitting.
-  It provides sufficient depth for hierarchical features, strong regularization for noisy/imbalanced data, and adequate classifier capacity for ambiguous emotions.
-
-5. FINAL PERFORMANCE METRICS
-----------------------------
-Training Accuracy (final epoch): ~68%
-Validation Accuracy: ~66%
-Test Accuracy (test_with_emotions.csv): 65.6%
-Training Time: ~70 minutes (Colab T4 GPU)
-Parameters: ~1.4 million
-
-This architecture represents the optimal trade-off between model capacity, generalization, and training stability for the FER2013 emotion detection task under the given constraints.
-
+To run in a headless environment (like a server or WSL without a GUI) where windows cannot be displayed:
+```bash
+python scripts/predict_live_stream.py /path/to/your/video.mp4 --no-display
 ```
-</details>
 
-## Performance & Limitations
-**Strengths**
-- Reaches project goal (>60%) without transfer learning
-- Real-time capable on modest hardware
-- Robust face centering & normalization
-
-**Limitations**
-- Imbalanced dataset → Disgust & Fear underperform
-- Haar Cascade → struggles with profile/low-light faces
-- No temporal modeling (single-frame prediction)
+---
 
 ## Future Improvements
-- Try transfer learning (MobileNetV2, EfficientNet)
-- Add class weights to handle imbalance
-- Use MTCNN or MediaPipe for better face detection
-- Implement temporal smoothing (average last 3–5 frames)
-- Deploy as web app (Streamlit / Flask) or Android app
-- Explore video-level emotion (RNN/LSTM on frame sequences)
+
+- **Transfer Learning**: Experiment with pre-trained models like VGG16 or ResNet50 (fine-tuned on the FER dataset) to potentially boost accuracy.
+- **Adversarial Robustness**: Investigate the model's vulnerability to adversarial attacks (e.g., FGSM) and explore defensive techniques.
+- **Prediction Smoothing**: Implement a moving average or a more advanced filter over the last few predictions to reduce output jitter.
+
+---
 
 ## License
 [MIT License](LICENSE) – feel free to use, modify, and learn from this project.
 ✉️ Contact / Connect
 
-## Contact/Connect
-    GitHub: github.com/SKisengese/facial-emotion-recognition
-    X / Twitter: @SKisengese
+---
 
+## Acknowledgments
+
+- The FER2013 dataset was provided by the Kaggle "Challenges in Representation Learning" competition.
+- This project was structured and guided by a comprehensive set of development tasks.
